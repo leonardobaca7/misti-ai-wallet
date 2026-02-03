@@ -367,7 +367,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Inicializar procesador y gestor de datos
-@st.cache_resource
+# NO usar cache para que siempre recargue los datos
 def init_components():
     processor = ExpenseProcessor()
     data_manager = DataManager()
