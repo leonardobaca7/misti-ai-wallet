@@ -115,6 +115,7 @@ class DataManager:
         Returns:
             DataFrame con todos los gastos/ingresos
         """
+        # Verificar si existe el archivo
         if not os.path.exists(self.csv_file):
             self._create_empty_csv()
             return pd.DataFrame(columns=[
@@ -122,10 +123,25 @@ class DataManager:
                 'descripcion', 'texto_original', 'timestamp'
             ])
         
+        # Leer CSV
         df = pd.read_csv(self.csv_file)
         
+        # Si está vacío, retornar inmediatamente
         if df.empty:
             return df
+        
+        # Convertir fecha PRIMERO (antes de filtrar)
+        try:
+            df['fecha'] = pd.to_datetime(df['fecha'], errors='coerce')
+        except Exception:
+            # Si falla la conversión, crear columna de fechas vacía
+            df['fecha'] = pd.NaT
+        
+        # Asegurar que id sea entero
+        try:
+            df['id'] = df['id'].astype(int)
+        except Exception:
+            df['id'] = 0
         
         # Asegurar que existe la columna usuario (para compatibilidad con datos antiguos)
         if 'usuario' not in df.columns:
@@ -138,12 +154,6 @@ class DataManager:
         # Filtrar por usuario si se especifica
         if usuario:
             df = df[df['usuario'] == usuario]
-        
-        # Convertir fecha a datetime solo si hay datos
-        if not df.empty:
-            df['fecha'] = pd.to_datetime(df['fecha'])
-            # Asegurar que id sea entero
-            df['id'] = df['id'].astype(int)
         
         return df
     
