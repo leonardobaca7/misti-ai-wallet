@@ -139,11 +139,11 @@ class DataManager:
         if usuario:
             df = df[df['usuario'] == usuario]
         
-        # Convertir fecha a datetime
-        df['fecha'] = pd.to_datetime(df['fecha'])
-        
-        # Asegurar que id sea entero
-        df['id'] = df['id'].astype(int)
+        # Convertir fecha a datetime solo si hay datos
+        if not df.empty:
+            df['fecha'] = pd.to_datetime(df['fecha'])
+            # Asegurar que id sea entero
+            df['id'] = df['id'].astype(int)
         
         return df
     
