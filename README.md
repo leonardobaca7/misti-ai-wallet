@@ -97,6 +97,7 @@ La app se abrirá en `http://localhost:8501` 🎉
 - **Streamlit**: Framework web interactivo
 - **Pandas**: Manipulación de datos
 - **Plotly**: Visualizaciones interactivas
+- **SQLite**: Base de datos persistente (incluido con Python)
 - **Python 3.13**: Lenguaje base
 - **SHA-256**: Encriptación de contraseñas
 - **Gmail SMTP**: Notificaciones por email
@@ -155,14 +156,12 @@ misti-ai-wallet/
 │
 ├── data/                       # Datos (no versionados)
 │   ├── .gitkeep
-│   ├── gastos.csv             # Transacciones
-│   └── users.json             # Usuarios
+│   └── misti_wallet.db        # Base de datos SQLite
 │
 └── utils/                      # Módulos del sistema
     ├── __init__.py
     ├── nlp_processor.py       # IA - Procesamiento lenguaje
-    ├── data_manager.py        # Gestión CSV
-    ├── user_manager.py        # Sistema usuarios
+    ├── database_manager.py    # Gestión base de datos SQLite
     └── email_manager.py       # Notificaciones Gmail
 ```
 
@@ -171,15 +170,15 @@ misti-ai-wallet/
 ## 🔒 Seguridad
 
 - ✅ Contraseñas hasheadas con SHA-256 (nunca en texto plano)
-- ✅ Datos separados por usuario en CSV/JSON
+- ✅ Datos separados por usuario en SQLite con claves foráneas
 - ✅ Contraseñas de Gmail no se almacenan en archivos
-- ✅ Archivos sensibles en `.gitignore`
+- ✅ Base de datos en `.gitignore` (no se sube a GitHub)
 - ✅ Sesiones seguras con Streamlit
 
 **IMPORTANTE:**
-- `data/users.json` y `data/gastos.csv` están en `.gitignore`
+- `data/misti_wallet.db` está en `.gitignore`
 - Usa contraseñas de aplicación de Gmail, NO tu contraseña principal
-- Los datos son locales, no hay servidor remoto
+- Los datos persisten en archivo SQLite local
 
 ---
 

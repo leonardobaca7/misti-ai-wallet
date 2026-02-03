@@ -19,8 +19,7 @@ if 'utils.email_manager' in sys.modules:
     importlib.reload(sys.modules['utils.email_manager'])
 
 from utils.nlp_processor import ExpenseProcessor
-from utils.data_manager import DataManager
-from utils.user_manager import UserManager
+from utils.database_manager import DatabaseManager
 from utils.email_manager import EmailManager
 
 # Configuración de la página
@@ -366,16 +365,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Inicializar procesador y gestor de datos
+# Inicializar procesador y gestor de base de datos
 # NO usar cache para que siempre recargue los datos
 def init_components():
     processor = ExpenseProcessor()
-    data_manager = DataManager()
-    user_manager = UserManager()
+    db_manager = DatabaseManager()
     email_manager = EmailManager()
-    return processor, data_manager, user_manager, email_manager
+    return processor, db_manager, email_manager
 
-processor, data_manager, user_manager, email_manager = init_components()
+processor, db_manager, email_manager = init_components()
 
 # ========== SISTEMA DE LOGIN / REGISTRO ==========
 # Inicializar estado de sesión
@@ -414,7 +412,7 @@ if not st.session_state.logged_in:
         
         if st.button("🚀 Ingresar", type="primary", use_container_width=True):
             if login_username and login_password:
-                result = user_manager.login_user(login_username, login_password)
+                result = db_manager.login_user(login_username, login_password)
                 if result['success']:
                     st.session_state.logged_in = True
                     st.session_state.current_user = result['user']
@@ -469,7 +467,7 @@ if not st.session_state.logged_in:
                 if new_password != new_password_confirm:
                     st.error("❌ Las contraseñas no coinciden")
                 else:
-                    result = user_manager.register_user(new_username, new_fullname, new_email, new_password)
+                    result = db_manager.register_user(new_username, new_fullname, new_email, new_password)
                     if result['success']:
                         st.success(result['message'])
                         st.balloons()
@@ -527,7 +525,7 @@ with st.sidebar:
     st.markdown("<div style='color: #00d4ff; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem;'>📅 FILTROS</div>", unsafe_allow_html=True)
     
     # Cargar datos del usuario actual
-    df = data_manager.load_expenses(usuario=current_user['username'])
+    df = db_manager.load_transactions(usuario=current_user['username'])
     
     # Botón de refrescar prominente
     if st.button("🔄 Actualizar Datos", type="primary", use_container_width=True):
@@ -608,7 +606,7 @@ with st.sidebar:
     with col1:
         if st.button("🗑️ Limpiar", type="secondary", use_container_width=True):
             if st.session_state.get('confirm_delete', False):
-                data_manager.clear_all_data()
+                db_manager.clear_user_data(current_user['username'])
                 st.success("✅ Eliminado")
                 st.session_state.confirm_delete = False
                 st.rerun()
@@ -757,7 +755,7 @@ with tab1:
                 
                 # Guardar el gasto/ingreso con la fecha detectada y usuario
                 tipo = result.get('tipo', 'gasto')
-                data_manager.add_expense(
+                db_manager.add_transaction(
                     monto=result['monto'],
                     categoria=result['categoria'],
                     descripcion=result['descripcion'],
@@ -1197,7 +1195,7 @@ with tab3:
                 st.write("")
                 st.write("")
                 if st.button("🗑️ Eliminar", type="secondary", use_container_width=True):
-                    data_manager.delete_expense(selected_expense)
+                    db_manager.delete_transaction(selected_expense)
                     st.success("✅ Eliminado")
                     st.rerun()
 

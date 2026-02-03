@@ -1,5 +1,9 @@
 # .gitignore para Misti AI Wallet
 
+# Base de datos SQLite (datos sensibles)
+data/misti_wallet.db
+data/*.db
+
 # Python
 __pycache__/
 *.py[cod]
