@@ -10,6 +10,8 @@
 
 Gestiona tus gastos e ingresos usando lenguaje natural. Dark mode profesional, multi-usuario y notificaciones por email.
 
+### 🚀 [**PRUEBA LA APP EN VIVO**](https://misti-ai-wallet.streamlit.app/) 🚀
+
 </div>
 
 ---
@@ -61,13 +63,21 @@ Escribe como hablas y la IA entiende automáticamente:
 
 ## 🚀 Instalación Rápida
 
-### 1. Clonar Repositorio
+### 🌐 Opción 1: Usar la App en la Nube (Recomendado)
+Accede directamente sin instalar nada:
+
+👉 **[https://misti-ai-wallet.streamlit.app/](https://misti-ai-wallet.streamlit.app/)** 👈
+
+### 💻 Opción 2: Instalación Local
+
+#### 1. Clonar Repositorio
+#### 1. Clonar Repositorio
 ```bash
 git clone https://github.com/leonardobaca7/misti-ai-wallet.git
 cd misti-ai-wallet
 ```
 
-### 2. Crear Entorno Virtual
+#### 2. Crear Entorno Virtual
 ```bash
 # Windows
 python -m venv venv
@@ -78,12 +88,12 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Instalar Dependencias
+#### 3. Instalar Dependencias
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Ejecutar Aplicación
+#### 4. Ejecutar Aplicación
 ```bash
 streamlit run app.py
 ```
