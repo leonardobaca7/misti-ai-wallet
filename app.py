@@ -24,6 +24,7 @@ from utils.user_manager import UserManager
 from utils.email_manager import EmailManager
 
 # Configuración de la página
+# Version: 1.0.1 - Fixed empty DataFrame handling
 st.set_page_config(
     page_title="Misti AI Wallet",
     page_icon="💰",
