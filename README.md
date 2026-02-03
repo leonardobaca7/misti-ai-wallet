@@ -63,7 +63,7 @@ Escribe como hablas y la IA entiende automáticamente:
 
 ### 1. Clonar Repositorio
 ```bash
-git clone https://github.com/tu-usuario/misti-ai-wallet.git
+git clone https://github.com/leonardobaca7/misti-ai-wallet.git
 cd misti-ai-wallet
 ```
 
@@ -249,12 +249,16 @@ Este proyecto está bajo la licencia MIT. Ver [LICENSE](LICENSE) para más detal
 
 Desarrollado con ❤️ usando Python, Streamlit y mucho café ☕
 
+**Leonardo Baca**
+- GitHub: [@leonardobaca7](https://github.com/leonardobaca7)
+- Proyecto: [Misti AI Wallet](https://github.com/leonardobaca7/misti-ai-wallet)
+
 ---
 
 <div align="center">
 
 **¿Te gusta el proyecto? ¡Dale una ⭐ en GitHub!**
 
-Made with 💰 by [Tu Nombre](https://github.com/tu-usuario)
+Made with 💰 by [Leonardo Baca](https://github.com/leonardobaca7)
 
 </div>
