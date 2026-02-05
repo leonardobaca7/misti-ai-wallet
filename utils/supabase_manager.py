@@ -66,18 +66,23 @@ class SupabaseManager:
             user_data = {
                 'username': username,
                 'full_name': full_name,
-                'email': email,
-                'password_hash': password_hash,
-                'created_at': datetime.now().isoformat(),
-                'last_login': datetime.now().isoformat()
+                'email': email or None,  # Convertir string vacío a NULL
+                'password_hash': password_hash
             }
             
-            self.client.table('users').insert(user_data).execute()
+            response = self.client.table('users').insert(user_data).execute()
+            
+            # Verificar si la inserción fue exitosa
+            if not response.data:
+                return False, f"❌ No se pudo crear el usuario. Verifica RLS en Supabase"
             
             return True, f"✅ Usuario '{username}' registrado exitosamente"
             
         except Exception as e:
-            return False, f"❌ Error al registrar: {str(e)}"
+            error_msg = str(e)
+            if "401" in error_msg or "Invalid API key" in error_msg:
+                return False, f"❌ Error RLS: Desactiva Row Level Security en las tablas de Supabase"
+            return False, f"❌ Error al registrar: {error_msg}"
     
     def authenticate_user(self, username: str, password: str) -> Tuple[bool, Optional[Dict]]:
         """
