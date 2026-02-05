@@ -56,7 +56,35 @@ CREATE INDEX IF NOT EXISTS idx_budgets_username ON budgets(username);
 
 ---
 
-## 🚂 PASO 2: Crear Cuenta en Railway (2 minutos)
+## � PASO 1.5: DESACTIVAR RLS (CRÍTICO - 1 minuto)
+
+**Sin este paso, NO podrás registrar usuarios.** 
+
+### Opción A - SQL (RÁPIDA):
+1. En **SQL Editor**, crea una nueva query
+2. Copia y pega:
+
+```sql
+ALTER TABLE users DISABLE ROW LEVEL SECURITY;
+ALTER TABLE transactions DISABLE ROW LEVEL SECURITY;
+ALTER TABLE budgets DISABLE ROW LEVEL SECURITY;
+```
+
+3. Click **"Run"**
+4. ✅ Deberías ver: **"Success. No rows returned"**
+
+### Opción B - UI (Click):
+1. Ve a **Table Editor** (icono de tabla 📊)
+2. Click en la tabla **"users"**
+3. Click en el botón **"RLS disabled"** (o el candado 🔒)
+4. Si dice "RLS enabled", haz click para **deshabilitarlo**
+5. Repite para las tablas **"transactions"** y **"budgets"**
+
+**¿Por qué?** RLS (Row Level Security) bloquea inserts desde la API por defecto.
+
+---
+
+## �🚂 PASO 2: Crear Cuenta en Railway (2 minutos)
 
 1. Ve a https://railway.app/
 2. Click en **"Login"**
@@ -85,8 +113,10 @@ Value: https://wytaduckicscvulotqhb.supabase.co
 **Variable 2:**
 ```
 Name: SUPABASE_KEY
-Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5dGFkdWNraWNzY3Z1bG90cWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyNDY5NDAsImV4cCI6MjA4NTgyMjk0MH0.wgcfKJIYg_e3AzLB1bJ94PkAhyL9ugBGk08_cLDPdP4
+Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5dGFkdWNraWNzY3Z1bG90cWhiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDI0Njk0MCwiZXhwIjoyMDg1ODIyOTQwfQ.8z9RrikvdtXwr2dJFjqH5on-xqvqeW8yUh9QUdaDyJ8
 ```
+
+**⚠️ IMPORTANTE:** Usa la **service_role key** (no la anon key) para tener permisos completos.
 
 4. Railway reiniciará automáticamente tu app
 
