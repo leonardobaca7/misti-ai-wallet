@@ -10,7 +10,9 @@
 
 Gestiona tus gastos e ingresos usando lenguaje natural. Dark mode profesional, multi-usuario y notificaciones por email.
 
-### 🚀 [**PRUEBA LA APP EN VIVO**](https://misti-ai-wallet.streamlit.app/) 🚀
+### 🚀 [**PRUEBA LA APP EN VIVO - Railway**](https://web-production-d33cb.up.railway.app/) 🚀
+
+> ⚡ **Desplegado en Railway** - Siempre activo 24/7 con base de datos persistente en Supabase
 
 </div>
 
