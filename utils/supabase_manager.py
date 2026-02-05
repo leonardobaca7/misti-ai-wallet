@@ -84,9 +84,8 @@ class SupabaseManager:
             error_msg = str(e)
             print(f"🔍 ERROR COMPLETO: {error_full}")
             
-            if "401" in error_msg or "Invalid API key" in error_msg or "new row violates row-level security" in error_msg.lower():
-                return False, f"❌ Error RLS: Ve a Supabase → Table Editor → users → Click el candado y desactiva RLS"
-            return False, f"❌ Error: {error_msg}"
+            # Mostrar el error REAL, no asumir que es RLS
+            return False, f"❌ Error al registrar: {error_msg}"
     
     def authenticate_user(self, username: str, password: str) -> Tuple[bool, Optional[Dict]]:
         """
