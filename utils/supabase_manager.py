@@ -19,18 +19,22 @@ class SupabaseManager:
     
     def __init__(self):
         """Inicializa conexión a Supabase"""
-        # Obtener credenciales desde secrets de Streamlit
+        # Obtener credenciales desde secrets de Streamlit O variables de entorno (Railway)
+        supabase_url = None
+        supabase_key = None
+        
+        # Primero intentar leer desde Streamlit secrets
         try:
             import streamlit as st
             supabase_url = st.secrets["supabase"]["url"]
             supabase_key = st.secrets["supabase"]["key"]
         except:
-            # Para desarrollo local
+            # Si falla, leer desde variables de entorno (Railway/producción)
             supabase_url = os.getenv("SUPABASE_URL")
             supabase_key = os.getenv("SUPABASE_KEY")
         
         if not supabase_url or not supabase_key:
-            raise ValueError("❌ Faltan credenciales de Supabase. Configura secrets.toml")
+            raise ValueError("❌ Faltan credenciales de Supabase. Configura secrets.toml o variables de entorno")
         
         self.client: Client = create_client(supabase_url, supabase_key)
         print("✅ Conectado a Supabase")
