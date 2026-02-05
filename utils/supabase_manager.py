@@ -79,10 +79,14 @@ class SupabaseManager:
             return True, f"✅ Usuario '{username}' registrado exitosamente"
             
         except Exception as e:
+            import traceback
+            error_full = traceback.format_exc()
             error_msg = str(e)
-            if "401" in error_msg or "Invalid API key" in error_msg:
-                return False, f"❌ Error RLS: Desactiva Row Level Security en las tablas de Supabase"
-            return False, f"❌ Error al registrar: {error_msg}"
+            print(f"🔍 ERROR COMPLETO: {error_full}")
+            
+            if "401" in error_msg or "Invalid API key" in error_msg or "new row violates row-level security" in error_msg.lower():
+                return False, f"❌ Error RLS: Ve a Supabase → Table Editor → users → Click el candado y desactiva RLS"
+            return False, f"❌ Error: {error_msg}"
     
     def authenticate_user(self, username: str, password: str) -> Tuple[bool, Optional[Dict]]:
         """
