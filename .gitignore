@@ -1,5 +1,8 @@
 # .gitignore para Misti AI Wallet
 
+# 🔐 CREDENCIALES DE SUPABASE (NO SUBIR)
+.streamlit/secrets.toml
+
 # Base de datos SQLite (datos sensibles)
 data/misti_wallet.db
 data/*.db

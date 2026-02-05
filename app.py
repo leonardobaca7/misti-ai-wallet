@@ -19,7 +19,7 @@ if 'utils.email_manager' in sys.modules:
     importlib.reload(sys.modules['utils.email_manager'])
 
 from utils.nlp_processor import ExpenseProcessor
-from utils.database_manager import DatabaseManager
+from utils.supabase_manager import SupabaseManager
 from utils.email_manager import EmailManager
 
 # Configuración de la página
@@ -365,11 +365,12 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Inicializar procesador y gestor de base de datos
-# NO usar cache para que siempre recargue los datos
+# Inicializar procesador y gestor de base de datos SUPABASE
+# AHORA CON PERSISTENCIA EN LA NUBE ☁️
+@st.cache_resource
 def init_components():
     processor = ExpenseProcessor()
-    db_manager = DatabaseManager()
+    db_manager = SupabaseManager()  # 🔥 NUEVA BASE DE DATOS EN LA NUBE
     email_manager = EmailManager()
     return processor, db_manager, email_manager
 
@@ -412,15 +413,16 @@ if not st.session_state.logged_in:
         
         if st.button("🚀 Ingresar", type="primary", use_container_width=True):
             if login_username and login_password:
-                result = db_manager.login_user(login_username, login_password)
-                if result['success']:
+                # 🔥 NUEVA AUTENTICACIÓN CON SUPABASE
+                success, user_data = db_manager.authenticate_user(login_username, login_password)
+                if success:
                     st.session_state.logged_in = True
-                    st.session_state.current_user = result['user']
-                    st.success(result['message'])
+                    st.session_state.current_user = user_data
+                    st.success(f"✅ Bienvenido {user_data['full_name']}!")
                     st.balloons()
                     st.rerun()
                 else:
-                    st.error(result['message'])
+                    st.error("❌ Usuario o contraseña incorrectos")
             else:
                 st.warning("⚠️ Por favor completa todos los campos")
     
@@ -467,16 +469,19 @@ if not st.session_state.logged_in:
                 if new_password != new_password_confirm:
                     st.error("❌ Las contraseñas no coinciden")
                 else:
-                    result = db_manager.register_user(new_username, new_fullname, new_email, new_password)
-                    if result['success']:
-                        st.success(result['message'])
+                    # 🔥 NUEVO REGISTRO CON SUPABASE
+                    success, message = db_manager.register_user(new_username, new_fullname, new_email, new_password)
+                    if success:
+                        st.success(message)
                         st.balloons()
                         # Auto-login después de registro
-                        st.session_state.logged_in = True
-                        st.session_state.current_user = result['user']
-                        st.rerun()
+                        success_login, user_data = db_manager.authenticate_user(new_username, new_password)
+                        if success_login:
+                            st.session_state.logged_in = True
+                            st.session_state.current_user = user_data
+                            st.rerun()
                     else:
-                        st.error(result['message'])
+                        st.error(message)
             else:
                 st.warning("⚠️ Por favor completa todos los campos requeridos")
     
@@ -524,8 +529,13 @@ with st.sidebar:
     # Filtros con estilo dark
     st.markdown("<div style='color: #00d4ff; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem;'>📅 FILTROS</div>", unsafe_allow_html=True)
     
-    # Cargar datos del usuario actual
-    df = db_manager.load_transactions(usuario=current_user['username'])
+    # Cargar datos del usuario actual desde SUPABASE 🔥
+    transactions = db_manager.get_user_transactions(current_user['username'])
+    df = pd.DataFrame(transactions)
+    
+    # Convertir fecha a datetime si hay datos
+    if not df.empty and 'fecha' in df.columns:
+        df['fecha'] = pd.to_datetime(df['fecha'])
     
     # Botón de refrescar prominente
     if st.button("🔄 Actualizar Datos", type="primary", use_container_width=True):
@@ -606,8 +616,10 @@ with st.sidebar:
     with col1:
         if st.button("🗑️ Limpiar", type="secondary", use_container_width=True):
             if st.session_state.get('confirm_delete', False):
-                db_manager.clear_user_data(current_user['username'])
-                st.success("✅ Eliminado")
+                # TODO: Implementar clear_user_data en Supabase
+                st.warning("⚠️ Función temporalmente deshabilitada")
+                # db_manager.clear_user_data(current_user['username'])
+                # st.success("✅ Eliminado")
                 st.session_state.confirm_delete = False
                 st.rerun()
             else:
@@ -755,15 +767,22 @@ with tab1:
                 
                 # Guardar el gasto/ingreso con la fecha detectada y usuario
                 tipo = result.get('tipo', 'gasto')
-                db_manager.add_transaction(
-                    monto=result['monto'],
-                    categoria=result['categoria'],
-                    descripcion=result['descripcion'],
-                    texto_original=expense_text,
-                    fecha=result.get('fecha', datetime.now()),
-                    usuario=current_user['username'],
-                    tipo=tipo
-                )
+                tipo_capitalized = "Ingreso" if tipo == 'ingreso' else "Gasto"
+                
+                # 🔥 GUARDAR EN SUPABASE
+                transaction_data = {
+                    'tipo': tipo_capitalized,
+                    'categoria': result['categoria'],
+                    'monto': result['monto'],
+                    'descripcion': result['descripcion'],
+                    'fecha': result.get('fecha', datetime.now()).strftime('%Y-%m-%d')
+                }
+                
+                success, message = db_manager.add_transaction(current_user['username'], transaction_data)
+                
+                if not success:
+                    st.error(f"Error al guardar: {message}")
+                    st.stop()
                 
                 st.balloons()
                 
@@ -1195,9 +1214,13 @@ with tab3:
                 st.write("")
                 st.write("")
                 if st.button("🗑️ Eliminar", type="secondary", use_container_width=True):
-                    db_manager.delete_transaction(selected_expense)
-                    st.success("✅ Eliminado")
-                    st.rerun()
+                    # 🔥 ELIMINAR DE SUPABASE
+                    success, message = db_manager.delete_transaction(selected_expense, current_user['username'])
+                    if success:
+                        st.success(message)
+                        st.rerun()
+                    else:
+                        st.error(message)
 
 # Footer dark mode
 st.markdown("---")
