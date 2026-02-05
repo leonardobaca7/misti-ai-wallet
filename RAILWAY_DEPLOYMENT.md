@@ -85,7 +85,7 @@ Value: https://wytaduckicscvulotqhb.supabase.co
 **Variable 2:**
 ```
 Name: SUPABASE_KEY
-Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5dGFkdWNraWNzY3Z1bG90cWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg2OTE3NTQsImV4cCI6MjA1NDI2Nzc1NH0.IDvNNv3AoRgzYrUC_Q_muDMvvB3WDv7BcqzUOVc4Tuc
+Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5dGFkdWNraWNzY3Z1bG90cWhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyNDY5NDAsImV4cCI6MjA4NTgyMjk0MH0.wgcfKJIYg_e3AzLB1bJ94PkAhyL9ugBGk08_cLDPdP4
 ```
 
 4. Railway reiniciará automáticamente tu app
